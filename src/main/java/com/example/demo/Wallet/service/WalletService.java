@@ -18,6 +18,8 @@ public class WalletService {
     WalletRepository walletRepository;
     @Autowired
     TransactionRepository transactionRepository;
+   /* @Autowired
+    TransactionElasticRepository transactionElasticRepository;*/
 
 
     public Wallet createWallet(RequestClass requestClass){
@@ -85,5 +87,36 @@ public class WalletService {
         }
     }
 
+/*
+    public String transferMoneyThroughElastic(Long payeePhoneNumber, Long payerPhoneNumber, Long amount) {
+        if (amount < 0)
+            return "amount cannot be negative";
+        try {
+            Wallet walletOfPayer = walletRepository.findByPhoneNumber(payerPhoneNumber);
+            Wallet walletOfPayee = walletRepository.findByPhoneNumber(payeePhoneNumber);
+            Transaction transaction = new Transaction(payeePhoneNumber, payerPhoneNumber, amount);
 
-}
+            if (walletOfPayer.getBalance() >= amount) {
+
+                walletOfPayer.setBalance(walletOfPayer.getBalance() - amount);
+                walletOfPayee.setBalance(walletOfPayee.getBalance() + amount);
+
+                walletRepository.save(walletOfPayer);
+                walletRepository.save(walletOfPayee);
+
+                transaction.setStatus(Transaction.Status.SUCCESS);
+                transactionElasticRepository.save(transaction);
+
+                return "Transfer Successful with transaction Id: " + transaction.getTxnID();
+            } else {
+                transaction.setStatus(Transaction.Status.FAILURE);
+                transactionElasticRepository.save(transaction);
+                return "Not Sufficient Balance in Payer's Wallet.";
+            }
+        }
+        catch (NullPointerException n) {
+            return "wrong payer phone number or payee phone number.";
+        }
+    }*/
+
+    }

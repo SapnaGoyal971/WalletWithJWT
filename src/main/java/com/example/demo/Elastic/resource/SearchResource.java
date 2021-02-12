@@ -3,10 +3,7 @@ package com.example.demo.Elastic.resource;
 import com.example.demo.Elastic.model.Users;
 import com.example.demo.Elastic.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +15,16 @@ public class SearchResource {
     @Autowired
     UsersRepository usersRepository;
 
+    @PostMapping("/saveUser")
+    public int saveCust(@RequestBody Users u){
+        usersRepository.save(u);
+        return 1;
+    }
+    @GetMapping(value = "/a")
+    public String Hello(){
+        return "hello";
+    }
+
     @GetMapping(value = "/name/{text}")
     public List<Users> searchName(@PathVariable final String text){
         return usersRepository.findByName(text);
@@ -25,6 +32,10 @@ public class SearchResource {
     @GetMapping(value = "/name/{salary}")
     public List<Users> searchSalary(@PathVariable final Long salary){
         return usersRepository.findBySalary(salary);
+    }
+    @GetMapping(value = "/alll")
+    public Iterable<Users> find(){
+        return usersRepository.findAll();
     }
     @GetMapping(value = "/all")
     public List<Users> searchAll(){

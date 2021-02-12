@@ -1,10 +1,13 @@
 package com.example.demo.Elastic.model;
 
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.annotation.Id;
 
 @Document(indexName = "users", indexStoreType= "users", shards = 1)
 public class Users {
+
     private String name;
+    @Id
     private Long id;
     private String teamName;
     private Long salary;

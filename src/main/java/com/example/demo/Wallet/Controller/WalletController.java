@@ -54,6 +54,11 @@ public class WalletController {
         return walletService.transferMoney(transferDetails.getPayeePhoneNumber(),transferDetails.getPayerPhoneNumber(),transferDetails.getAmount());
     }
 
+ /*   @RequestMapping(method = RequestMethod.PUT,value = "/elastic/transaction")
+    public String transferMoneyThroughElastic(@RequestBody TransferDetails transferDetails){
+        return walletService.transferMoneyThroughElastic(transferDetails.getPayeePhoneNumber(),transferDetails.getPayerPhoneNumber(),transferDetails.getAmount());
+    }*/
+
 
 
 }
