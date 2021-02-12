@@ -1,6 +1,5 @@
 package com.example.demo.Elastic.resource;
 
-import com.example.demo.Elastic.load.Loaders;
 import com.example.demo.Elastic.model.Users;
 import com.example.demo.Elastic.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;

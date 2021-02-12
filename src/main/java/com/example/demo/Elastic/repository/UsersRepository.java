@@ -1,6 +1,5 @@
 package com.example.demo.Elastic.repository;
 
-import com.example.demo.Elastic.load.Loaders;
 import com.example.demo.Elastic.model.Users;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
