@@ -2,7 +2,9 @@ package com.example.demo.Wallet.service;
 
 import com.example.demo.Wallet.Classes.RequestClass;
 import com.example.demo.Wallet.Classes.Transaction;
+import com.example.demo.Wallet.Classes.TransactionElastic;
 import com.example.demo.Wallet.Classes.Wallet;
+import com.example.demo.Wallet.Repositories.TransactionElasticRepository;
 import com.example.demo.Wallet.Repositories.TransactionRepository;
 import com.example.demo.Wallet.Repositories.WalletRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +20,8 @@ public class WalletService {
     WalletRepository walletRepository;
     @Autowired
     TransactionRepository transactionRepository;
-   /* @Autowired
-    TransactionElasticRepository transactionElasticRepository;*/
+    @Autowired
+    TransactionElasticRepository transactionElasticRepository;
 
 
     public Wallet createWallet(RequestClass requestClass){
@@ -87,14 +89,14 @@ public class WalletService {
         }
     }
 
-/*
+
     public String transferMoneyThroughElastic(Long payeePhoneNumber, Long payerPhoneNumber, Long amount) {
         if (amount < 0)
             return "amount cannot be negative";
         try {
             Wallet walletOfPayer = walletRepository.findByPhoneNumber(payerPhoneNumber);
             Wallet walletOfPayee = walletRepository.findByPhoneNumber(payeePhoneNumber);
-            Transaction transaction = new Transaction(payeePhoneNumber, payerPhoneNumber, amount);
+            TransactionElastic transactionElastic = new TransactionElastic(payeePhoneNumber, payerPhoneNumber, amount);
 
             if (walletOfPayer.getBalance() >= amount) {
 
@@ -104,19 +106,19 @@ public class WalletService {
                 walletRepository.save(walletOfPayer);
                 walletRepository.save(walletOfPayee);
 
-                transaction.setStatus(Transaction.Status.SUCCESS);
-                transactionElasticRepository.save(transaction);
+                transactionElastic.setStatus(TransactionElastic.Status.SUCCESS);
+                transactionElasticRepository.save(transactionElastic);
 
-                return "Transfer Successful with transaction Id: " + transaction.getTxnID();
+                return "Transfer Successful with transaction Id: " + transactionElastic.getTxnID();
             } else {
-                transaction.setStatus(Transaction.Status.FAILURE);
-                transactionElasticRepository.save(transaction);
+                transactionElastic.setStatus(TransactionElastic.Status.FAILURE);
+                transactionElasticRepository.save(transactionElastic);
                 return "Not Sufficient Balance in Payer's Wallet.";
             }
         }
         catch (NullPointerException n) {
             return "wrong payer phone number or payee phone number.";
         }
-    }*/
+    }
 
     }

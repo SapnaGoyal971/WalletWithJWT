@@ -2,7 +2,11 @@ package com.example.demo.Wallet.Classes;
 
 import org.springframework.data.elasticsearch.annotations.Document;
 
-import javax.persistence.*;
+//import javax.persistence.*;
+import org.springframework.data.annotation.Id;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import java.sql.Timestamp;
 
 @Document(indexName = "db_example", indexStoreType= "Transaction", shards = 1)
