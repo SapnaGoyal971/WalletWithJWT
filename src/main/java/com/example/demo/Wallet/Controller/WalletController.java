@@ -41,38 +41,44 @@ public class WalletController {
         return "hello";
     }
 
+    //API which will create wallet for a user
     @RequestMapping(method = RequestMethod.POST, value = "/wallet")
     public String createWallet(@RequestBody RequestClass request){
         if(userRepository.findByMobileNumber(request.getPhoneNumber()).isEmpty())
             return "Phone Number does not exists.";
         try {
-           Wallet wallet = walletService.createWallet(request);
-            return "Wallet Created Successfully" + " with User Id: "+wallet.getUserId() ;
+            Wallet wallet = new Wallet(request.getPhoneNumber());
+           Wallet wallet1 = walletService.createWallet(wallet);
+            return "Wallet Created Successfully" + " with User Id: "+wallet1.getUserId() ;
 
         }
         catch (NullPointerException n) {
             return "Wallet with this Phone number already exists";}
         }
 
+    //Transaction Status API
     @RequestMapping(method = RequestMethod.GET, value = "/transaction")
     public Transaction.Status getTransactionStatus(@RequestParam Long txnId){
         return walletService.getTransactionStatus(txnId);
        }
 
+       //Transaction Summary API
     @RequestMapping(method = RequestMethod.GET, value = "/transaction/")
     public Page<Transaction> getTransactionSummary(@RequestParam Long userId, @RequestParam int pageNo){
         return walletService.getTransactionSummary(userId, pageNo);
     }
 
-
+    //API to transfer money from one wallet to another wallet (p2p).
     @RequestMapping(method = RequestMethod.PUT,value = "/transaction")
     public String transferMoney(@RequestBody TransferDetails transferDetails){
         return walletService.transferMoney(transferDetails.getPayeePhoneNumber(),transferDetails.getPayerPhoneNumber(),transferDetails.getAmount());
     }
 
+    //Topic in Kafka
     private static final String TOPIC="test";
 
     TransferDetails t=new TransferDetails();
+    //Kafka Listener
     @KafkaListener(topics = "test", groupId ="group_json", containerFactory = "transferDetailsKafkaListenerFactory")
     public TransferDetails consumeTransferDetailsJson(TransferDetails transferDetails){
      t=transferDetails;
@@ -89,6 +95,7 @@ public class WalletController {
         return t;
     }
 
+    //API to transfer money from one wallet to another wallet trough elasticsearch and by ingesting data to elastic search through Kafka.
     @RequestMapping(method = RequestMethod.PUT,value = "/elastic/transaction")
     public String transferMoneyThroughElastic(@RequestBody TransferDetails transferDetails) throws InterruptedException {
         LOGGER.addHandler(fileHandler);

@@ -24,8 +24,8 @@ public class WalletService {
     TransactionElasticRepository transactionElasticRepository;
 
 
-    public Wallet createWallet(RequestClass requestClass){
-        Wallet wallet = new Wallet(requestClass.getPhoneNumber());
+    public Wallet createWallet(Wallet wallet){
+
    try {
             walletRepository.save(wallet);
             return wallet;
