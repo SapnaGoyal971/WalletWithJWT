@@ -11,11 +11,18 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.*;
+
 
 @RestController
 @RequestMapping("/hospital")
+
 public class WalletController {
+    private static final Logger LOGGER = Logger.getLogger(WalletController.class.getName());
+
+    Handler fileHandler = new FileHandler("C:\\Users\\sapna.goyal\\wallet.log");
 
     @Autowired
     KafkaTemplate<String, TransferDetails> kafkaTemplate;
@@ -25,6 +32,9 @@ public class WalletController {
 
     @Autowired
     UserRepository userRepository;
+
+    public WalletController() throws IOException {
+    }
 
     @RequestMapping(method = RequestMethod.GET,value = "/hospital/Hello")
     public String helloWorld(){
@@ -66,7 +76,12 @@ public class WalletController {
     @KafkaListener(topics = "test", groupId ="group_json", containerFactory = "transferDetailsKafkaListenerFactory")
     public TransferDetails consumeTransferDetailsJson(TransferDetails transferDetails){
      t=transferDetails;
-        System.out.println("Consumed Json Message of TransferDetails: "+ transferDetails);
+        LOGGER.addHandler(fileHandler);
+        SimpleFormatter simpleFormatter = new SimpleFormatter();
+        fileHandler.setFormatter(simpleFormatter);
+
+        LOGGER.log(Level.INFO,"Consumed Json Message of TransferDetails: "+transferDetails);
+      //  System.out.println("Consumed Json Message of TransferDetails: "+ transferDetails);
         return transferDetails;
     }
 
@@ -76,14 +91,20 @@ public class WalletController {
 
     @RequestMapping(method = RequestMethod.PUT,value = "/elastic/transaction")
     public String transferMoneyThroughElastic(@RequestBody TransferDetails transferDetails) throws InterruptedException {
+        LOGGER.addHandler(fileHandler);
+        SimpleFormatter simpleFormatter = new SimpleFormatter();
+        fileHandler.setFormatter(simpleFormatter);
 
         kafkaTemplate.send(TOPIC,transferDetails);
         TimeUnit.SECONDS.sleep(2);
 
         TransferDetails transferDetailsFromKafkaConsumer=getTransferDetailsFromKafkaConsumer();
-        System.out.println(transferDetailsFromKafkaConsumer.getAmount());
+        LOGGER.log(Level.INFO,"Transfer Details from Kafka Consumer in controller: "+transferDetailsFromKafkaConsumer.getAmount() + " "+
+                transferDetailsFromKafkaConsumer.getPayeePhoneNumber()+ " "+transferDetailsFromKafkaConsumer.getPayerPhoneNumber() );
+
+      /*  System.out.println(transferDetailsFromKafkaConsumer.getAmount());
         System.out.println(transferDetailsFromKafkaConsumer.getPayeePhoneNumber());
-        System.out.println(transferDetailsFromKafkaConsumer.getPayerPhoneNumber());
+        System.out.println(transferDetailsFromKafkaConsumer.getPayerPhoneNumber());*/
 
         return walletService.transferMoneyThroughElastic(transferDetailsFromKafkaConsumer.getPayeePhoneNumber(),
           transferDetailsFromKafkaConsumer.getPayerPhoneNumber(),
