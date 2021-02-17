@@ -2,6 +2,7 @@ package com.example.demo.Kafka.config;
 
 import com.example.demo.Kafka.KafkaErrorHandler;
 import com.example.demo.Kafka.model.User;
+import com.example.demo.Wallet.Classes.TransferDetails;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -45,18 +46,6 @@ public class kafkaConfiguration {
         return new KafkaTemplate<>(producerFactory());
     }
 
-  /*  @Bean
-    public ConsumerAwareListenerErrorHandler listen3ErrorHandler() {
-        return (m, e, c) -> {
-            this.listen3Exception = e;
-            MessageHeaders headers = m.getHeaders();
-            c.seek(new org.apache.kafka.common.TopicPartition(
-                            headers.get(KafkaHeaders.RECEIVED_TOPIC, String.class),
-                            headers.get(KafkaHeaders.RECEIVED_PARTITION_ID, Integer.class)),
-                    headers.get(KafkaHeaders.OFFSET, Long.class));
-            return null;
-        };
-    }*/
     @Bean
     public ConsumerFactory<String,String> consumerFactory(){
         Map<String, Object> config= new HashMap<>();
@@ -84,12 +73,7 @@ public class kafkaConfiguration {
         Map<String, Object> config= new HashMap<>();
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, " 192.168.29.103:9092");
         config.put(ConsumerConfig.GROUP_ID_CONFIG,"group_json");
-
-        //   config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
-        //   config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
-        // config.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, JsonDeserializer.class);
-        config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        //  config.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class.getName());
+      config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
 
         return new DefaultKafkaConsumerFactory<String,User>(config,new StringDeserializer(),
@@ -102,6 +86,42 @@ public class kafkaConfiguration {
         factory.setConsumerFactory(userConsumerFactory());
         factory.setErrorHandler(new KafkaErrorHandler());
         return factory;
+    }
+
+    @Bean
+    public ConsumerFactory<String,TransferDetails> transferDetailsConsumerFactory(){
+        Map<String, Object> config= new HashMap<>();
+        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, " 192.168.29.103:9092");
+        config.put(ConsumerConfig.GROUP_ID_CONFIG,"group_json");
+        config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+
+        return new DefaultKafkaConsumerFactory<String, TransferDetails>(config,new StringDeserializer(),
+                new JsonDeserializer<>(TransferDetails.class));
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String,TransferDetails> transferDetailsKafkaListenerFactory(){
+        ConcurrentKafkaListenerContainerFactory<String,TransferDetails> factory=new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(transferDetailsConsumerFactory());
+        factory.setErrorHandler(new KafkaErrorHandler());
+        return factory;
+    }
+
+
+    @Bean
+    public ProducerFactory<String,TransferDetails> producerFactoryTransferDetails(){
+
+        Map<String, Object> config= new HashMap<>();
+        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, " 192.168.29.103:9092");
+        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        return new DefaultKafkaProducerFactory<>(config);
+    }
+
+    @Bean
+    public KafkaTemplate<String, TransferDetails> kafkaTemplateTransferDetails(){
+        return new KafkaTemplate<>(producerFactoryTransferDetails());
     }
 
 }

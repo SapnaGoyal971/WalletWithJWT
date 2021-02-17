@@ -5,6 +5,16 @@ public class TransferDetails {
     private Long payerPhoneNumber;
     private Long amount;
 
+
+    @Override
+    public String toString() {
+        return "TransferDetails{" +
+                "payeePhoneNumber=" + payeePhoneNumber +
+                ", payerPhoneNumber=" + payerPhoneNumber +
+                ", amount=" + amount +
+                '}';
+    }
+
     public Long getPayerPhoneNumber() {
         return payerPhoneNumber;
     }

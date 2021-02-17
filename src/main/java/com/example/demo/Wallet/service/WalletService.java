@@ -1,9 +1,6 @@
 package com.example.demo.Wallet.service;
 
-import com.example.demo.Wallet.Classes.RequestClass;
-import com.example.demo.Wallet.Classes.Transaction;
-import com.example.demo.Wallet.Classes.TransactionElastic;
-import com.example.demo.Wallet.Classes.Wallet;
+import com.example.demo.Wallet.Classes.*;
 import com.example.demo.Wallet.Repositories.TransactionElasticRepository;
 import com.example.demo.Wallet.Repositories.TransactionRepository;
 import com.example.demo.Wallet.Repositories.WalletRepository;
@@ -11,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,6 +1,7 @@
 package com.example.demo.Kafka.listener;
 
 import com.example.demo.Kafka.model.User;
+import com.example.demo.Wallet.Classes.TransferDetails;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -17,4 +18,15 @@ public class KafkaConsumer {
         System.out.println("Consumed Json Message: "+ user);
     }
 
+   /* TransferDetails t;
+    @KafkaListener(topics = "test", groupId ="group_json", containerFactory = "transferDetailsKafkaListenerFactory")
+    public TransferDetails consumeTransferDetailsJson(TransferDetails transferDetails){
+        t=transferDetails;
+        System.out.println("Consumed Json Message of TransferDetails: "+ transferDetails);
+        return transferDetails;
+    }
+
+    public TransferDetails getTransferDetailsFromKafkaConsumer(){
+        return t;
+    }*/
 }

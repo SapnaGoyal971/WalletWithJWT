@@ -12,8 +12,7 @@ import java.sql.Timestamp;
 @Document(indexName = "db_example", indexStoreType= "Transaction", shards = 1)
 public class TransactionElastic {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long txnID;
+    private String txnID;
 
     private Timestamp timestamp;
     private long amount;
@@ -39,11 +38,11 @@ public class TransactionElastic {
         this.timestamp = timestamp;
     }
 
-    public long getTxnID() {
+    public String getTxnID() {
         return txnID;
     }
 
-    public void setTxnID(long txnID) {
+    public void setTxnID(String txnID) {
         this.txnID = txnID;
     }
 
