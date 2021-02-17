@@ -1,16 +1,13 @@
 package com.example.demo.Wallet.Controller;
-import com.example.demo.Kafka.listener.KafkaConsumer;
-import com.example.demo.Kafka.model.User;
-import com.example.demo.Wallet.Classes.RequestClass;
-import com.example.demo.Wallet.Classes.Transaction;
-import com.example.demo.Wallet.Classes.TransferDetails;
-import com.example.demo.Wallet.Classes.Wallet;
-import com.example.demo.Wallet.Repositories.UserRepository;
+import com.example.demo.Wallet.Classes.WalletClasses.RequestClass;
+import com.example.demo.Wallet.Classes.WalletClasses.Transaction;
+import com.example.demo.Wallet.Classes.WalletClasses.TransferDetails;
+import com.example.demo.Wallet.Classes.WalletClasses.Wallet;
+import com.example.demo.Wallet.Repositories.UserRepositories.UserRepository;
 import com.example.demo.Wallet.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -88,7 +85,6 @@ public class WalletController {
         System.out.println(transferDetailsFromKafkaConsumer.getPayeePhoneNumber());
         System.out.println(transferDetailsFromKafkaConsumer.getPayerPhoneNumber());
 
-      //  return "hii";
         return walletService.transferMoneyThroughElastic(transferDetailsFromKafkaConsumer.getPayeePhoneNumber(),
           transferDetailsFromKafkaConsumer.getPayerPhoneNumber(),
           transferDetailsFromKafkaConsumer.getAmount());

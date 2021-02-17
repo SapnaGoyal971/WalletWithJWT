@@ -1,7 +1,7 @@
 package com.example.demo.Wallet.service;
 
 import com.example.demo.Wallet.Classes.UserClasses.User;
-import com.example.demo.Wallet.Repositories.UserRepository;
+import com.example.demo.Wallet.Repositories.UserRepositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
